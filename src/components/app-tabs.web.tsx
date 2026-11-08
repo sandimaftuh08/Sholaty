@@ -1,4 +1,4 @@
-import {
+﻿import {
   Tabs,
   TabList,
   TabTrigger,
@@ -33,9 +33,9 @@ export default function AppTabs() {
   );
 }
 
-export function TabButton({ children, isFocused, ...props }: TabTriggerSlotProps) {
+export function TabButton({ children, isFocused, ref, ...props }: TabTriggerSlotProps) {
   return (
-    <Pressable {...props} style={({ pressed }) => pressed && styles.pressed}>
+    <Pressable {...props}>
       <ThemedView
         type={isFocused ? 'backgroundSelected' : 'backgroundElement'}
         style={styles.tabButtonView}>
@@ -113,3 +113,4 @@ const styles = StyleSheet.create({
     marginLeft: Spacing.three,
   },
 });
+

@@ -1,0 +1,103 @@
+
+import * as Location from 'expo-location';
+
+// Bentuk data lokasi
+export interface LocationResult {
+  name: string;
+  latitude: number;
+  longitude: number;
+  country?: string;
+  admin1?: string;
+}
+
+// =====================================
+// 1. FUNGSI MENCARI KOTA
+// =====================================
+
+export async function cariKota(
+  query: string
+): Promise<LocationResult[]> {
+  if (!query.trim()) {
+    return [];
+  }
+
+  try {
+    const url =
+      `https://geocoding-api.open-meteo.com/v1/search?` +
+      `name=${encodeURIComponent(query)}` +
+      `&count=10&language=id&format=json`;
+
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error('Gagal mencari kota');
+    }
+
+    const data = await response.json();
+
+    if (!data.results) {
+      return [];
+    }
+
+    return data.results.map((item: any) => ({
+      name: item.name,
+      latitude: item.latitude,
+      longitude: item.longitude,
+      country: item.country,
+      admin1: item.admin1,
+    }));
+  } catch (error) {
+    console.error('Error mencari kota:', error);
+    return [];
+  }
+}
+
+// =====================================
+// 2. FUNGSI MENDAPATKAN LOKASI PENGGUNA
+// =====================================
+
+export async function getUserLocation(): Promise<LocationResult> {
+  try {
+    // Meminta izin akses lokasi
+    const permission =
+      await Location.requestForegroundPermissionsAsync();
+
+    if (permission.status !== 'granted') {
+      throw new Error('Izin lokasi tidak diberikan');
+    }
+
+    // Mengambil koordinat pengguna
+    const position = await Location.getCurrentPositionAsync({
+      accuracy: Location.Accuracy.Balanced,
+    });
+
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
+
+    // Mengubah koordinat menjadi nama wilayah
+    const address = await Location.reverseGeocodeAsync({
+      latitude,
+      longitude,
+    });
+
+    const place = address[0];
+
+    const name =
+      place?.city ||
+      place?.district ||
+      place?.subregion ||
+      place?.region ||
+      'Lokasi saya';
+
+    return {
+      name,
+      latitude,
+      longitude,
+      country: place?.country || 'Indonesia',
+      admin1: place?.region || '',
+    };
+  } catch (error) {
+    console.error('Error mendapatkan lokasi:', error);
+    throw error;
+  }
+}

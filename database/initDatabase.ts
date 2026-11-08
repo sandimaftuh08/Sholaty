@@ -1,5 +1,7 @@
 ﻿import type { SQLiteDatabase } from 'expo-sqlite';
 
+import { DUAS } from '../src/data/duas';
+
 export async function initDatabase(db: SQLiteDatabase) {
   await db.execAsync(`
     PRAGMA journal_mode = WAL;
@@ -77,4 +79,27 @@ export async function initDatabase(db: SQLiteDatabase) {
     INSERT OR IGNORE INTO user_settings (id, city, country, theme)
     VALUES (1, 'Pekalongan', 'Indonesia', 'blue')
   `);
+
+  // ---- TAMBAHAN: kolom kategori untuk filter di halaman Dzikir ----
+  const duaColumns = await db.getAllAsync<{ name: string }>(
+    'PRAGMA table_info(daily_duas)'
+  );
+  if (!duaColumns.some((column) => column.name === 'category')) {
+    await db.execAsync('ALTER TABLE daily_duas ADD COLUMN category TEXT');
+  }
+
+  // ---- TAMBAHAN: isi awal doa & dzikir (hanya jika tabel masih kosong) ----
+  const jumlahDoa = await db.getFirstAsync<{ n: number }>(
+    'SELECT COUNT(*) AS n FROM daily_duas'
+  );
+  if (!jumlahDoa || jumlahDoa.n === 0) {
+    await db.withTransactionAsync(async () => {
+      for (const d of DUAS) {
+        await db.runAsync(
+          'INSERT INTO daily_duas (id, title, arabic, latin, translation, category) VALUES (?, ?, ?, ?, ?, ?)',
+          [d.id, d.title, d.arabic, d.latin, d.translation, d.category]
+        );
+      }
+    });
+  }
 }

@@ -10,7 +10,7 @@ export const C = {
   border: '#EBD9A8',
   text: '#0B4A33',
   muted: '#6B7F76',
-  danger: '#B3402F',
+  danger: '#B3402F'
 } as const;
 
 export type PrayerKey = 'Fajr' | 'Dhuhr' | 'Asr' | 'Maghrib' | 'Isha';

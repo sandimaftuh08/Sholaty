@@ -1,15 +1,17 @@
+import { C } from '@/constants/palette';
+import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import { SQLiteProvider } from 'expo-sqlite';
 import { StatusBar } from 'expo-status-bar';
-import { Text } from 'react-native';
+import type { ColorValue } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
-import { C } from '@/constants/palette';
 import { initDatabase } from '../../database/initDatabase';
 
-const emoji = (icon: string) =>
-  function TabIcon({ focused }: { focused: boolean }) {
-    return <Text style={{ fontSize: 22, opacity: focused ? 1 : 0.55 }}>{icon}</Text>;
+type NamaIcon = keyof typeof Ionicons.glyphMap;
+
+const ikon = (aktif: NamaIcon, mati: NamaIcon) =>
+  function TabIcon({ color, focused }: { color: ColorValue; focused: boolean }) {
+    return <Ionicons name={focused ? aktif : mati} size={24} color={color as string} />;
   };
 
 export default function RootLayout() {
@@ -34,11 +36,11 @@ export default function RootLayout() {
           },
           tabBarLabelStyle: { fontSize: 11, fontWeight: '700' },
         }}>
-        <Tabs.Screen name="index" options={{ title: 'Beranda', tabBarIcon: emoji('🏠') }} />
-        <Tabs.Screen name="qibla" options={{ title: 'Kiblat', tabBarIcon: emoji('🧭') }} />
-        <Tabs.Screen name="dhikr" options={{ title: 'Dzikir', tabBarIcon: emoji('📿') }} />
-        <Tabs.Screen name="checklist" options={{ title: 'Checklist', tabBarIcon: emoji('✅') }} />
-        <Tabs.Screen name="settings" options={{ title: 'Pengaturan', tabBarIcon: emoji('⚙️') }} />
+        <Tabs.Screen name="index" options={{ title: 'Beranda', tabBarIcon: ikon('home', 'home-outline') }} />
+<Tabs.Screen name="qibla" options={{ title: 'Kiblat', tabBarIcon: ikon('compass', 'compass-outline') }} />
+<Tabs.Screen name="dhikr" options={{ title: 'Dzikir', tabBarIcon: ikon('sparkles', 'sparkles-outline') }} />
+<Tabs.Screen name="checklist" options={{ title: 'Checklist', tabBarIcon: ikon('checkbox', 'checkbox-outline') }} />
+<Tabs.Screen name="settings" options={{ title: 'Pengaturan', tabBarIcon: ikon('settings', 'settings-outline') }} />
         {/* halaman bawaan template, disembunyikan dari tab bar */}
         <Tabs.Screen name="explore" options={{ href: null }} />
       </Tabs>

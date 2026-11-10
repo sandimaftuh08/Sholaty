@@ -1,7 +1,7 @@
 import { createElement, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { buatHtmlPeta } from './mapHtml';
+import { buatHtmlPeta } from '../services/mapHtml';
 
 type Props = { latitude: number; longitude: number };
 

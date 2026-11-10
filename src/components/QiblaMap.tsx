@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 
-import { buatHtmlPeta } from './mapHtml';
+import { buatHtmlPeta } from '../services/mapHtml';
 
 type Props = { latitude: number; longitude: number };
 

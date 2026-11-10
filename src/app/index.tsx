@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
@@ -11,19 +12,19 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import HeaderMasjid from '../components/HeaderMasjid';
 import { searchCity as cariKota, getUserLocation } from '../services/locationService';
 import {
   getPrayerTimes,
   getPrayerTimesByCoordinates,
   PrayerTimes,
 } from '../services/prayerApi';
-
 const daftarSholat = [
-  { nama: 'Subuh', arab: 'الفجر', key: 'Fajr', emoji: '🌙' },
-  { nama: 'Dzuhur', arab: 'الظهر', key: 'Dhuhr', emoji: '☀️' },
-  { nama: 'Ashar', arab: 'العصر', key: 'Asr', emoji: '🌤️' },
-  { nama: 'Maghrib', arab: 'المغرب', key: 'Maghrib', emoji: '🌅' },
-  { nama: 'Isya', arab: 'العشاء', key: 'Isha', emoji: '🌌' },
+  { nama: 'Subuh', arab: 'الفجر', key: 'Fajr', ikon: 'star' },
+  { nama: 'Dzuhur', arab: 'الظهر', key: 'Dhuhr', ikon: 'sunny' },
+  { nama: 'Ashar', arab: 'العصر', key: 'Asr', ikon: 'partly-sunny' },
+  { nama: 'Maghrib', arab: 'المغرب', key: 'Maghrib', ikon: 'cloudy-night' },
+  { nama: 'Isya', arab: 'العشاء', key: 'Isha', ikon: 'moon' },
 ] as const;
 
 const WARNA = {
@@ -172,25 +173,14 @@ export default function HomeScreen() {
   });
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <StatusBar barStyle="light-content" />
       <ScrollView
         style={{ backgroundColor: WARNA.krem }}
         showsVerticalScrollIndicator={false}
       >
-        {/* HEADER */}
-        <View style={styles.header}>
-          <Text style={styles.bismillah}>بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ</Text>
-          <View style={styles.ornamenBaris}>
-            <View style={styles.garisEmas} />
-            <Text style={styles.ornamen}>✦</Text>
-            <View style={styles.garisEmas} />
-          </View>
-          <Text style={styles.logo}>Sholaty</Text>
-          <Text style={styles.sapaan}>Assalamu'alaikum</Text>
-          <Text style={styles.subsapaan}>Yuk, jaga sholat hari ini</Text>
-          <Text style={styles.tanggal}>{tanggal}</Text>
-        </View>
+                {/* HEADER */}
+        <HeaderMasjid tanggal={tanggal} />
 
         {/* KARTU UTAMA */}
         <View style={styles.kartuUtamaLuar}>
@@ -282,7 +272,11 @@ export default function HomeScreen() {
               key={item.nama}
             >
               <View style={[styles.lingkaran, aktif && styles.lingkaranAktif]}>
-                <Text style={styles.emojiKecil}>{item.emoji}</Text>
+                <Ionicons
+                name={item.ikon}
+                     size={24}
+                 color={aktif ? WARNA.emasMuda : WARNA.hijau}
+                    />
               </View>
 
               <View style={{ flex: 1 }}>

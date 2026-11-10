@@ -25,11 +25,13 @@ export function buatHtmlPeta(lat: number, lng: number): string {
   var path = ${JSON.stringify(path)};
   var user = ${JSON.stringify(user)};
   var kaaba = ${JSON.stringify(kaaba)};
+ 
 
   var map = L.map('map');
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-    subdomains: 'abcd', maxZoom: 18,
-    attribution: '&copy; OpenStreetMap &copy; CARTO'
+
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map);
 
   function pin(html, bg, size) {
